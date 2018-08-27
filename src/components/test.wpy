@@ -1,0 +1,128 @@
+<style lang="less">
+</style>
+<template>
+  <view class="wepy-list">
+    test页面
+    <slot name="title">默认标题</slot>
+    <slot name="content">默认内容</slot>
+    <view @tap="test1">点击测试</view>
+    <view>{{aPlus}}</view>
+    <view @tap="clickItem(item,index)" wx:for-items="{{items}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+      {{item.name}}dad
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Test extends wepy.component {
+  data = {
+    a: 1,
+    items:[
+      {name:'111'},
+      {name:'222'},
+      {name:'333'},
+    ],
+    counter:0
+  }
+ 
+  methods = {
+    test1 () {
+      let test = this.test()
+      console.log(test)
+    },
+    clickItem (item,index) {
+      this.$emit('clickItem',item,index)
+    }
+  }
+
+  computed = {
+    aPlus () {
+      return this.a + 1
+    }
+  }
+
+  watch = {
+    a (newValue, oldValue) {
+      // console.log(`a value:${oldValue}->${newValue}`)
+    }
+  }
+
+  test () {
+    let a = 6
+    let b = 10
+    let sum = a + b
+    console.log(sum)
+    var m = new Map([['Michael', 95], ['Bob', 75], ['Tracy', 85]])
+    console.log(m.get('Michael'))
+    let promise = new Promise(function(resolve, reject) {
+      console.log('promise1111')
+      resolve('ok')
+      throw new Error('test')
+    })
+    .then(result => result)
+    .catch(e => e)
+    let promise1 = new Promise(function(resolve, reject) {
+      console.log('promise1111')
+      resolve('ok')
+      throw new Error('test')
+    })
+    .then(result => result)
+    .catch(e => e)
+    Promise.all([promise, promise1])
+    .then(result => console.log(result))
+    .catch(function(error) {
+      console.log(error)
+    })
+    console.log('Hi!')
+  }
+  onLoad () {
+    this.$emit('some-event',1,2,3,4)
+    setTimeout(() => {
+      console.log('three')
+    }, 0)
+    Promise.resolve().then(function() {
+      console.log('two')
+    })
+    console.log('one')
+    const p = new Promise((resolve, reject) => reject('错了'))
+    p.then(null, function(s) {
+      console.log(s)
+    })
+    setInterval(()=>{
+      this.a++
+      this.$apply()
+    },1000)
+    console.log(this.title)
+    console.log(this.syncTitle)
+    console.log(this.twoWayTitle)
+    this.title = 'c-title'
+    this.twoWayTitle = 'two-way-title'
+    this.$apply()
+    console.log(this.$parent.parentTitle)
+    this.$parent.parentTitle = 'p-title-changed'
+    this.$parent.$apply()
+    console.log(this.title)
+    console.log(this.syncTitle)
+    console.log(this.twoWayTitle)
+  }
+
+  props = {
+    title: String,
+    syncTitle: {
+      type: String,
+      default: null
+    },
+    twoWayTitle: {
+      type: String,
+      default: 'nothing',
+      twoWay: true
+    },
+    num: {
+      type:Number,
+      value:1
+    }
+  }
+}
+</script>
